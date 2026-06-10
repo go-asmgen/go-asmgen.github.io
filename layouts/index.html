@@ -88,7 +88,7 @@
       </article>
       {{ end }}
     </section>
-    <p class="principles">All four targets share one ABI0 layout model — scalars, struct/slice/string aggregates, and SSE/NEON SIMD — differing only in their move tables. Every emitted <code>name+offset(FP)</code> is cross-checked against the Go declaration by <code>go vet</code> and run for real: natively on amd64 and arm64, under qemu-user for riscv64 and loong64.</p>
+    <p class="principles">All four targets share one ABI0 layout model — scalars, struct/slice/string aggregates, fixed-size arrays, and SIMD (SSE, NEON, RVV, LSX) — differing only in their move tables. Every emitted <code>name+offset(FP)</code> is cross-checked against the Go declaration by <code>go vet</code> and run for real: natively on amd64 and arm64, under qemu-user for riscv64 and loong64.</p>
   </main>
 
   <footer class="wrap">
