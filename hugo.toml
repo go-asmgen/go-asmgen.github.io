@@ -12,8 +12,8 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
   regs = "R0.. / F0.."
 [[params.targets]]
   name = "riscv64"
-  status = "planned"
-  blurb = "RV64GC, reusing the same emit layer — only an ABI model and a thin instruction surface."
+  status = "ready"
+  blurb = "Same ABI0 layout as arm64, a different move table (MOV/MOVF/MOVD). Runtime-proven under qemu-user."
   regs = "X0.. / F0.."
 [[params.targets]]
   name = "loong64"
