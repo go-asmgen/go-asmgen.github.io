@@ -17,6 +17,6 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
   regs = "X0.. / F0.."
 [[params.targets]]
   name = "loong64"
-  status = "planned"
-  blurb = "LoongArch 64-bit, same recipe: an ABI0 layout model on top of the shared emitter."
+  status = "ready"
+  blurb = "LoongArch 64-bit — same shared ABI0 layout, a third move table (MOVV/MOVF/MOVD). Runtime-proven under qemu-user."
   regs = "R0.. / F0.."
