@@ -6,9 +6,14 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
   unsafe = true
 
 [[params.targets]]
+  name = "amd64"
+  status = "ready"
+  blurb = "Yes, amd64 too — for one uniform builder across every target. SSE float moves, sign/zero-extending sub-word loads. NEON/SSE SIMD via Raw."
+  regs = "AX.. / X0.."
+[[params.targets]]
   name = "arm64"
   status = "ready"
-  blurb = "ABI0 frame layout + Plan 9 instruction emit. 8-byte int/ptr args today; sub-word ints and floats next."
+  blurb = "All ABI0 scalars + struct/slice/string aggregates, and NEON packed ops. The reference target; runtime-proven natively."
   regs = "R0.. / F0.."
 [[params.targets]]
   name = "riscv64"
