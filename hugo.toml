@@ -1,0 +1,22 @@
+baseURL = "https://go-asmgen.github.io/"
+title = "go-asmgen"
+disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[[params.targets]]
+  name = "arm64"
+  status = "ready"
+  blurb = "ABI0 frame layout + Plan 9 instruction emit. 8-byte int/ptr args today; sub-word ints and floats next."
+  regs = "R0.. / F0.."
+[[params.targets]]
+  name = "riscv64"
+  status = "planned"
+  blurb = "RV64GC, reusing the same emit layer — only an ABI model and a thin instruction surface."
+  regs = "X0.. / F0.."
+[[params.targets]]
+  name = "loong64"
+  status = "planned"
+  blurb = "LoongArch 64-bit, same recipe: an ABI0 layout model on top of the shared emitter."
+  regs = "R0.. / F0.."

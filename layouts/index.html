@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Site.Title }} — Plan 9 assembly generation for non-amd64</title>
+<meta name="description" content="Ergonomic generation of Go-compatible Plan 9 assembly for non-amd64 architectures (arm64, riscv64, loong64), delegating encoding to cmd/asm.">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1b1f24; --muted: #57606a; --card: #f6f8fa;
+    --border: #d0d7de; --accent: #0969da; --accent-fg: #ffffff;
+    --ready: #1a7f37; --planned: #9a6700;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --card: #161b22;
+      --border: #30363d; --accent: #4493f8; --accent-fg: #0d1117;
+      --ready: #3fb950; --planned: #d29922;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 72px 0 32px; text-align: center; }
+  h1 { font-size: 2.6rem; margin: 0 0 .3em; letter-spacing: -.02em; }
+  .tagline { font-size: 1.2rem; color: var(--muted); margin: 0 auto; max-width: 660px; }
+  .pills { margin: 22px 0 0; }
+  .pill {
+    display: inline-block; margin: 4px; padding: 3px 10px; font-size: .82rem;
+    color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 999px;
+  }
+  .cta { margin: 30px 0 0; }
+  .btn {
+    display: inline-block; padding: 10px 18px; margin: 4px; border-radius: 8px; text-decoration: none;
+    font-weight: 600; border: 1px solid var(--border);
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .btn.ghost { color: var(--fg); background: transparent; }
+  .lead { color: var(--fg); max-width: 760px; margin: 8px auto 0; text-align: center; }
+  .lead code { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; padding: 24px 0 8px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .card h3 { margin: 0 0 .35em; font-size: 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+  .card h3 code { font-size: 1.2rem; }
+  .card p { margin: 0 0 .8em; color: var(--fg); }
+  .card .regs { color: var(--muted); font-size: .85rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .status { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); }
+  .status.ready { color: var(--ready); }
+  .status.planned { color: var(--planned); }
+  .principles { color: var(--muted); text-align: center; padding: 10px 0 0; }
+  footer { color: var(--muted); text-align: center; padding: 40px 0 56px; font-size: .9rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <header class="wrap">
+    <h1>go-asmgen</h1>
+    <p class="tagline">Ergonomic generation of Go-compatible <strong>Plan 9 assembly</strong>
+      for non-amd64 architectures — the multi-architecture counterpart to <code>avo</code>.</p>
+    <div class="pills">
+      <span class="pill">emits text, not bytes</span>
+      <span class="pill">cmd/asm encodes</span>
+      <span class="pill">ABI0</span>
+      <span class="pill">go vet asmdecl-checked</span>
+      <span class="pill">100% test coverage</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="/docs/">Documentation</a>
+      <a class="btn ghost" href="https://github.com/go-asmgen/asmgen">GitHub</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p class="lead"><code>avo</code> encodes amd64 instruction bytes itself — which is exactly what makes
+      extending it to new ISAs expensive. go-asmgen instead emits the same Plan 9 assembly text a human
+      would hand-write and lets the Go toolchain assembler <code>cmd/asm</code> encode it. Each new
+      architecture needs only an ABI layout model and a thin instruction-emit surface.</p>
+
+    <section class="grid">
+      {{ range .Site.Params.targets }}
+      <article class="card">
+        <h3><code>{{ .name }}</code> <span class="status {{ .status }}">{{ .status }}</span></h3>
+        <p>{{ .blurb }}</p>
+        <div class="regs">{{ .regs }}</div>
+      </article>
+      {{ end }}
+    </section>
+    <p class="principles">Every emitted <code>name+offset(FP)</code> is cross-checked against the Go declaration by <code>go vet</code>, and run for real on native arm64.</p>
+  </main>
+
+  <footer class="wrap">
+    BSD-3-Clause · <a href="https://github.com/go-asmgen">github.com/go-asmgen</a>
+  </footer>
+</body>
+</html>
