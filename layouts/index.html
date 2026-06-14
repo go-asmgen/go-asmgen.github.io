@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ .Site.Title }} — Plan 9 assembly generation for every 64-bit Go target</title>
-<meta name="description" content="Ergonomic generation of Go-compatible Plan 9 assembly for every 64-bit Go target (amd64, arm64, riscv64, loong64), delegating encoding to cmd/asm.">
+<meta name="description" content="Ergonomic generation of Go-compatible Plan 9 assembly for every 64-bit Go target (amd64, arm64, riscv64, loong64, ppc64le, s390x), delegating encoding to cmd/asm.">
 <style>
   :root {
     --bg: #ffffff; --fg: #1b1f24; --muted: #57606a; --card: #f6f8fa;
@@ -59,7 +59,7 @@
   <header class="wrap">
     <h1>go-asmgen</h1>
     <p class="tagline">Ergonomic generation of Go-compatible <strong>Plan 9 assembly</strong>
-      for <strong>every 64-bit Go target</strong> — amd64, arm64, riscv64 and loong64 — one uniform builder, encoding delegated to <code>cmd/asm</code>.</p>
+      for <strong>all six 64-bit Go targets</strong> — amd64, arm64, riscv64, loong64, ppc64le and s390x — one uniform builder, encoding delegated to <code>cmd/asm</code>.</p>
     <div class="pills">
       <span class="pill">emits text, not bytes</span>
       <span class="pill">cmd/asm encodes</span>
@@ -88,7 +88,7 @@
       </article>
       {{ end }}
     </section>
-    <p class="principles">All four targets share one ABI0 layout model — scalars, struct/slice/string aggregates, fixed-size arrays, and SIMD (SSE, NEON, RVV, LSX) — differing only in their move tables. Every emitted <code>name+offset(FP)</code> is cross-checked against the Go declaration by <code>go vet</code> and run for real: natively on amd64 and arm64, under qemu-user for riscv64 and loong64.</p>
+    <p class="principles">All six targets share one ABI0 layout model — scalars, struct/slice/string aggregates, fixed-size arrays, and SIMD (SSE, NEON, RVV, LSX, VSX, s390x vector) — differing only in their move tables. Every emitted <code>name+offset(FP)</code> is cross-checked against the Go declaration by <code>go vet</code> and run for real: natively on amd64 and arm64, under qemu-user for riscv64, loong64, ppc64le and s390x (the s390x run exercising the big-endian path).</p>
   </main>
 
   <footer class="wrap">

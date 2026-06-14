@@ -25,3 +25,13 @@ disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
   status = "ready"
   blurb = "LoongArch 64-bit — same shared ABI0 layout, a third move table (MOVV/MOVF/MOVD). Runtime-proven under qemu-user."
   regs = "R0.. / F0.."
+[[params.targets]]
+  name = "ppc64le"
+  status = "ready"
+  blurb = "POWER little-endian — same shared ABI0 layout, move table MOVD/FMOVS/FMOVD. VSX packed ops via Raw. Runtime-proven under qemu-user."
+  regs = "R0.. / F0.."
+[[params.targets]]
+  name = "s390x"
+  status = "ready"
+  blurb = "IBM Z, big-endian — same shared ABI0 layout, move table MOVD/FMOVS/FMOVD. Vector-facility ops via Raw; the big-endian path is exercised. Runtime-proven under qemu-user."
+  regs = "R0.. / F0.."
