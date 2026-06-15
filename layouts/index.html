@@ -26,6 +26,7 @@
   .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
   header { padding: 72px 0 32px; text-align: center; }
   h1 { font-size: 2.6rem; margin: 0 0 .3em; letter-spacing: -.02em; }
+  .logo { width: 88px; height: 88px; margin: 0 auto 18px; display: block; }
   .tagline { font-size: 1.2rem; color: var(--muted); margin: 0 auto; max-width: 660px; }
   .pills { margin: 22px 0 0; }
   .pill {
@@ -57,6 +58,7 @@
 </head>
 <body>
   <header class="wrap">
+    <img class="logo" src="/img/logo.svg" alt="go-asmgen logo" width="88" height="88">
     <h1>go-asmgen</h1>
     <p class="tagline">Ergonomic generation of Go-compatible <strong>Plan 9 assembly</strong>
       for <strong>all six 64-bit Go targets</strong> — amd64, arm64, riscv64, loong64, ppc64le and s390x — one uniform builder, encoding delegated to <code>cmd/asm</code>.</p>
