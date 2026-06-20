@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/go-asmgen/brand/main/social/go-asmgen.png" alt="go-asmgen/go-asmgen.github.io" width="720"></p>
+
 # go-asmgen.github.io
 
 The organization's institutional landing page, served at
