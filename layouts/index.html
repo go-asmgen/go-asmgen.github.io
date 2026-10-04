@@ -103,11 +103,13 @@
     <p class="lead"><code>avo</code> encodes amd64 instruction bytes itself — which is exactly what makes
       extending it to new ISAs expensive. go-asmgen instead emits the same Plan 9 assembly text a human
       would hand-write and lets the Go toolchain assembler <code>cmd/asm</code> encode it. Each new
-      architecture needs only an ABI layout model and a thin instruction-emit surface. The few
-      instructions <code>cmd/asm</code> lacks — arm64 vector float64 arithmetic (<code>VFADD2D</code>…)
-      and ppc64le VSX float64 arithmetic (<code>XVADDDP</code>…) — go-asmgen encodes as <code>WORD</code>s,
-      pinned against the system assembler (Apple <code>as</code> for arm64, GNU as 2.44 for ppc64) and
-      run bit-identical on hardware.</p>
+      architecture needs only an ABI layout model and a thin instruction-emit surface. Since v0.15.0,
+      <code>cmd/asm</code> also encodes the arm64 vector float64 arithmetic (<code>VFADD2D</code>…). The few instructions <code>cmd/asm</code>
+      cannot assemble yet (ppc64le VSX float64 arithmetic, the loong64 vector FMA) are emitted as
+      <code>WORD</code>s whose comment shows the spelling proposed for <code>cmd/asm</code>. Each one has a
+      registry entry with its references, and from that registry come the
+      <a href="https://github.com/go-asmgen/asmgen/tree/main/goasm-patches">Go patches</a> that would make the
+      <code>WORD</code> unnecessary.</p>
 
     <section class="grid">
       {{ range .Site.Params.targets }}
