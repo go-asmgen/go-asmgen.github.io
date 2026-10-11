@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{{/* Dark Reader repaints pages that already draw their own dark theme, as this one does: ask it to stand aside. */}}
+<meta name="darkreader-lock">
 <title>{{ .Site.Title }} — Plan 9 assembly generation for every 64-bit Go target</title>
 <meta name="description" content="Ergonomic generation of Go-compatible Plan 9 assembly for every 64-bit Go target (amd64, arm64, riscv64, loong64, ppc64le, s390x), delegating encoding to cmd/asm except where it lacks an instruction.">
 <style>
