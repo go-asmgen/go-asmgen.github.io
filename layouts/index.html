@@ -3,106 +3,57 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{{/* Dark Reader repaints pages that already draw their own dark theme, as this one does: ask it to stand aside. */}}
-<meta name="darkreader-lock">
 <title>{{ .Site.Title }} — Plan 9 assembly generation for every 64-bit Go target</title>
 <meta name="description" content="Ergonomic generation of Go-compatible Plan 9 assembly for every 64-bit Go target (amd64, arm64, riscv64, loong64, ppc64le, s390x), delegating encoding to cmd/asm except where it lacks an instruction.">
-<style>
-  :root {
-    --bg: #ffffff; --fg: #1b1f24; --muted: #57606a; --card: #f6f8fa;
-    --border: #d0d7de; --accent: #0969da; --accent-fg: #ffffff;
-    --ready: #1a7f37; --planned: #9a6700;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) {
-      --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --card: #161b22;
-      --border: #30363d; --accent: #4493f8; --accent-fg: #0d1117;
-      --ready: #3fb950; --planned: #d29922;
-    }
-  }
-  /* Forced dark (manual toggle wins over the OS preference). */
-  :root[data-theme="dark"] {
-  --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --card: #161b22;
-  --border: #30363d; --accent: #4493f8; --accent-fg: #0d1117;
-  --ready: #3fb950; --planned: #d29922;
-  }
-  /* Forced light (manual toggle wins over the OS preference). */
-  :root[data-theme="light"] {
-  --bg: #ffffff; --fg: #1b1f24; --muted: #57606a; --card: #f6f8fa;
-  --border: #d0d7de; --accent: #0969da; --accent-fg: #ffffff;
-  --ready: #1a7f37; --planned: #9a6700;
-  }
-  .theme-toggle {
-    position: fixed; top: 14px; right: 14px; z-index: 10;
-    font: inherit; font-size: .8rem; cursor: pointer; padding: 6px 12px;
-    color: var(--fg); background: var(--card); border: 1px solid var(--border); border-radius: 999px;
-  }
-  .theme-toggle:hover { border-color: var(--accent); }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--fg);
-    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  }
-  .wrap { max-width: 920px; margin: 0 auto; padding: 0 20px; }
-  header { padding: 72px 0 32px; text-align: center; }
-  h1 { font-size: 2.6rem; margin: 0 0 .3em; letter-spacing: -.02em; }
-  .logo { width: 88px; height: 88px; margin: 0 auto 18px; display: block; }
-  .tagline { font-size: 1.2rem; color: var(--muted); margin: 0 auto; max-width: 660px; }
-  .pills { margin: 22px 0 0; }
-  .pill {
-    display: inline-block; margin: 4px; padding: 3px 10px; font-size: .82rem;
-    color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 999px;
-  }
-  .cta { margin: 30px 0 0; }
-  .btn {
-    display: inline-block; padding: 10px 18px; margin: 4px; border-radius: 8px; text-decoration: none;
-    font-weight: 600; border: 1px solid var(--border);
-  }
-  .btn .icon{display:inline-block;vertical-align:-0.15em;margin-right:.45em}
-  .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
-  .btn.ghost { color: var(--fg); background: transparent; }
-  .lead { color: var(--fg); max-width: 760px; margin: 8px auto 0; text-align: center; }
-  .lead code { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; padding: 24px 0 8px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
-  .card h3 { margin: 0 0 .35em; font-size: 1.2rem; display: flex; align-items: center; justify-content: space-between; }
-  .card h3 code { font-size: 1.2rem; }
-  .card p { margin: 0 0 .8em; color: var(--fg); }
-  .card .regs { color: var(--muted); font-size: .85rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-  .status { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); }
-  .status.ready { color: var(--ready); }
-  .status.planned { color: var(--planned); }
-  .principles { color: var(--muted); text-align: center; padding: 10px 0 0; }
-  footer { color: var(--muted); text-align: center; padding: 40px 0 56px; font-size: .9rem; }
-  a { color: var(--accent); }
-</style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script>
-  // Apply the saved theme before first paint to avoid a flash; "system" leaves no attribute.
-  (function(){var m=localStorage.getItem('theme');if(m&&m!=='system')document.documentElement.setAttribute('data-theme',m);})();
-</script>
+{{ partial "styles.html" . }}
+{{/* The template's own rules for what <main> holds, kept for it alone (class legacy),
+     its colours read from the kit's tokens. Written by landingmigrate. */}}
+<style>
+.legacy{--fg:var(--ink);--muted:var(--slate);--card:var(--bg-soft);--border:var(--line);--ready:#1a7f37;--planned:#9a6700}
+@media(prefers-color-scheme:dark){:root:not([data-theme]) .legacy{--ready:#3fb950;--planned:#d29922}}
+:root[data-theme="dark"] .legacy{--ready:#3fb950;--planned:#d29922}
+.legacy .theme-toggle:hover{border-color: var(--accent);}
+.legacy .lead{color: var(--fg); max-width: 760px; margin: 8px auto 0; text-align: center;}
+.legacy .grid{display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; padding: 24px 0 8px;}
+.legacy .card{background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px;}
+.legacy .card h3{margin: 0 0 .35em; font-size: 1.2rem; display: flex; align-items: center; justify-content: space-between;}
+.legacy .card h3 code{font-size: 1.2rem;}
+.legacy .card p{margin: 0 0 .8em; color: var(--fg);}
+.legacy .card .regs{color: var(--muted); font-size: .85rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;}
+.legacy .status{font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border);}
+.legacy .status.ready{color: var(--ready);}
+.legacy .status.planned{color: var(--planned);}
+.legacy .principles{color: var(--muted); text-align: center; padding: 10px 0 0;}
+</style>
 </head>
-<body>
-  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle light, dark or system theme"><span id="theme-label">🖥️ System</span></button>
-  <header class="wrap">
-    <img class="logo" src="/img/logo.svg" alt="go-asmgen logo" width="88" height="88">
-    <h1>go-asmgen</h1>
-    <p class="tagline">Ergonomic generation of Go-compatible <strong>Plan 9 assembly</strong>
-      for <strong>all six 64-bit Go targets</strong> — amd64, arm64, riscv64, loong64, ppc64le and s390x — one uniform builder, encoding delegated to <code>cmd/asm</code> wherever it has the instruction.</p>
-    <div class="pills">
-      <span class="pill">emits text, not bytes</span>
-      <span class="pill">cmd/asm encodes</span>
-      <span class="pill">ABI0</span>
-      <span class="pill">go vet asmdecl-checked</span>
-      <span class="pill">100% test coverage</span>
-    </div>
-    <div class="cta">
-      <a class="btn primary" href="/docs/">{{ partial "icons/book.html" . }}Documentation</a>
-      <a class="btn ghost" href="https://github.com/go-asmgen/asmgen">{{ partial "icons/mark-github.html" . }}GitHub</a>
-    </div>
-  </header>
+<body class="lm">
+  <header class="nav"><div class="wrap">
+    <a class="brand" href="/"><img class="glyph" src="/img/logo.svg" width="32" height="32" alt="go-asmgen logo"> {{ .Site.Title }}</a>
+    {{ partial "theme-toggle.html" . }}
+  </div></header>
+  {{ partial "fork-ribbon.html" "https://github.com/go-asmgen" }}
 
-  <main class="wrap">
+  <div class="hero"><div class="wrap">
+    <div>
+      <h1 class="head">go-asmgen</h1>
+      <p class="sub">Ergonomic generation of Go-compatible <strong>Plan 9 assembly</strong>
+      for <strong>all six 64-bit Go targets</strong> — amd64, arm64, riscv64, loong64, ppc64le and s390x — one uniform builder, encoding delegated to <code>cmd/asm</code> wherever it has the instruction.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/docs/">{{ partial "icons/book.html" . }}Documentation</a>
+        <a class="btn btn-ghost" href="https://github.com/go-asmgen/asmgen">{{ partial "icons/github.html" . }}GitHub</a>
+      </div>
+      <div class="trust"><span class="pill">emits text, not bytes</span><span class="pill">cmd/asm encodes</span><span class="pill">ABI0</span><span class="pill">go vet asmdecl-checked</span><span class="pill">100% test coverage</span></div>
+    </div>
+    {{ partial "hero-carousel.html" . }}
+  </div></div>
+
+  {{ with .Site.Params.repos }}<div class="strip"><div class="wrap">
+    <span class="lead-line">One organisation, <b>{{ len . }}</b> repositories</span>
+    <div class="mods">{{ range . }}<a href="#repos">{{ .name }}</a>{{ end }}</div>
+  </div></div>{{ end }}
+
+  <main id="repos" class="legacy"><div class="wrap">
     <p class="lead"><code>avo</code> encodes amd64 instruction bytes itself — which is exactly what makes
       extending it to new ISAs expensive. go-asmgen instead emits the same Plan 9 assembly text a human
       would hand-write and lets the Go toolchain assembler <code>cmd/asm</code> encode it. Each new
@@ -124,20 +75,8 @@
       {{ end }}
     </section>
     <p class="principles">All six targets share one ABI0 layout model — scalars, struct/slice/string aggregates, fixed-size arrays, and SIMD (SSE, NEON, RVV, LSX, VSX, s390x vector) — differing only in their move tables. Every emitted <code>name+offset(FP)</code> is cross-checked against the Go declaration by <code>go vet</code> and run for real: natively on amd64 and arm64, under qemu-user for riscv64, loong64, ppc64le and s390x (the s390x run exercising the big-endian path).</p>
-  </main>
+    </div></main>
 
-  <footer class="wrap">
-    BSD-3-Clause · <a href="https://github.com/go-asmgen">github.com/go-asmgen</a>
-  </footer>
-  <script>
-  (function(){
-    var order=['system','light','dark'], root=document.documentElement;
-    var labels={system:'🖥️ System',light:'☀️ Light',dark:'🌙 Dark'};
-    function apply(m){ if(m==='system'){root.removeAttribute('data-theme');}else{root.setAttribute('data-theme',m);} localStorage.setItem('theme',m); var el=document.getElementById('theme-label'); if(el)el.textContent=labels[m]; }
-    var mode=localStorage.getItem('theme')||'system'; apply(mode);
-    var btn=document.getElementById('theme-toggle');
-    if(btn) btn.addEventListener('click',function(){ mode=order[(order.indexOf(mode)+1)%order.length]; apply(mode); });
-  })();
-  </script>
+  <footer><div class="wrap"><span>{{ if not (partial "mantra-on.html" $) }}BSD-3-Clause · {{ end }}<a href="https://github.com/go-asmgen">github.com/go-asmgen</a></span></div></footer>
 </body>
 </html>
